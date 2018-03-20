@@ -8,11 +8,9 @@ from os.path import isdir, join
 
 # Math
 import numpy as np
-from scipy.fftpack import fft
 from scipy import signal
 from scipy.io import wavfile
 
-from sklearn.decomposition import PCA
 import cv2
 from cv2 import resize
 
