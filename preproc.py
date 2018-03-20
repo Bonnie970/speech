@@ -43,6 +43,11 @@ def log_specgram(audio, sample_rate, window_size=20,
 											noverlap=noverlap, detrend=False)
 	return freqs, times, np.log(spec.T.astype(np.float32) + eps)
 
+def one_hot_encode(label,num_class=10):
+	l = np.zeros(num_class)
+	l[label] = 1
+	return l
+
 def main():
 	datadir = './dataset/train/audio/'
 	labels = {'yes':0,'no':1,'up':2,'down':3,'left':4,'right':5,'on':6,'off':7,'go':8,'stop':9}
@@ -66,10 +71,10 @@ def main():
 
 			if i<len(files)/5:
 				test_in.append(spectrogram)
-				test_out.append(label)
+				test_out.append(one_hot_encode(label))
 			else:
 				train_in.append(spectrogram)
-				train_out.append(label)
+				train_out.append(one_hot_encode(label))
 	train_in = np.array(train_in, dtype=np.float32)
 	train_out = np.array(train_out, dtype=np.int32)
 	test_in = np.array(test_in, dtype=np.float32)
