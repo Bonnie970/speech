@@ -61,6 +61,8 @@ def build_CNN(input_shape):
 	return cnn
 
 def train_CNN(cnn, train_in, train_out, epochs, batchsize):
+	from tensorflow.python.client import device_lib
+	device_lib.list_local_devices()
 	cnn.fit(x=train_in,y=train_out,batch_size=batchsize,epochs=epochs,shuffle=True)
 
 def test_CNN(cnn, test_in, test_out, batchsize):
