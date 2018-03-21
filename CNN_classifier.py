@@ -60,10 +60,10 @@ def build_CNN(input_shape):
 	cnn.summary()
 	return cnn
 
-def train_CNN(cnn, train_in, train_out, epochs, batchsize):
+def train_CNN(cnn, train_in, train_out, epochs, batchsize, validation_split=0):
 	from tensorflow.python.client import device_lib
 	device_lib.list_local_devices()
-	cnn.fit(x=train_in,y=train_out,batch_size=batchsize,epochs=epochs,shuffle=True)
+	cnn.fit(x=train_in,y=train_out,batch_size=batchsize,epochs=epochs,shuffle=True, validation_split=validation_split)
 
 def test_CNN(cnn, test_in, test_out, batchsize):
 	acc = cnn.evaluate(x=test_in,y=test_out,batch_size=batchsize)
@@ -95,7 +95,7 @@ def main():
 	batchsize = 100
 	train_in, train_out, test_in, test_out, input_shape, labels = load_dataset(data_filepath)
 	cnn = build_CNN(input_shape)
-	train_CNN(cnn, train_in, train_out, epochs=epochs, batchsize=batchsize)
+	train_CNN(cnn, train_in, train_out, epochs=epochs, batchsize=batchsize, validation_split=0.05)
 	test_CNN(cnn, test_in, test_out, batchsize=batchsize)
 	save_CNN(cnn,json_filepath='./models/speech_CNN_v1.txt',weight_filepath='./models/speech_CNN_v1.h5')
 	cnn2 = load_CNN(json_filepath='./models/speech_CNN_v1.txt',weight_filepath='./models/speech_CNN_v1.h5')
