@@ -14,32 +14,31 @@ def load_dataset(filepath):
 	test_out = mini_speech_data['test_out']
 	labels = mini_speech_data['labels']
 	input_shape = train_in[0].shape
-	print(labels)
-	print(train_in.shape)
-	print(test_in.shape)
-	print(input_shape)
 	return train_in, train_out, test_in, test_out, input_shape, labels		
 
 def build_CNN(input_shape):
-	print(input_shape)
 	cnn = keras.models.Sequential()
 	# conv layer 1
 	cnn.add(Conv2D(filters=16, kernel_size=(3,3), padding='same', strides=(1,1), input_shape=input_shape))
+	cnn.add(BatchNormalization())
 	cnn.add(Activation(activation=keras.activations.relu))
 	# max pooling
 	cnn.add(MaxPooling2D(pool_size=(2,2)))
 	# conv layer 2
 	cnn.add(Conv2D(filters=16, kernel_size=(3,3), padding='same', strides=(1,1)))
+	cnn.add(BatchNormalization())
 	cnn.add(Activation(activation=keras.activations.relu))
 	# max pooling
 	cnn.add(MaxPooling2D(pool_size=(2,2)))
 	# conv layer 3
 	cnn.add(Conv2D(filters=32, kernel_size=(3,3), padding='same', strides=(1,1)))
+	cnn.add(BatchNormalization())
 	cnn.add(Activation(activation=keras.activations.relu))
 	# max pooling
 	cnn.add(MaxPooling2D(pool_size=(2,2)))
 	# conv layer 4
 	cnn.add(Conv2D(filters=32, kernel_size=(3,3), padding='same', strides=(1,1)))
+	cnn.add(BatchNormalization())
 	cnn.add(Activation(activation=keras.activations.relu))
 	# max pooling
 	cnn.add(MaxPooling2D(pool_size=(2,2)))
@@ -48,10 +47,13 @@ def build_CNN(input_shape):
 	cnn.add(Dense(units=128))
 	cnn.add(Activation(activation=keras.activations.relu))
 	cnn.add(Dropout(rate=0.2))
+	# fc layer 2
 	cnn.add(Dense(units=64))
 	cnn.add(Activation(activation=keras.activations.relu))
 	cnn.add(Dropout(rate=0.2))
+	# output layer
 	cnn.add(Dense(units=10))
+	cnn.add(BatchNormalization())
 	cnn.add(Activation(activation=keras.activations.softmax))
 
 	cnn.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.adam(), metrics=['acc'])
