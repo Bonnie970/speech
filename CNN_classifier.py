@@ -97,7 +97,8 @@ def main():
 	train_in, train_out, test_in, test_out, input_shape, labels = load_dataset(data_filepath)
 	cnn = build_CNN(input_shape)
 	train_CNN(cnn, train_in, train_out, epochs=epochs, batchsize=batchsize, validation_split=0.05)
-	test_CNN(cnn, test_in, test_out, batchsize=batchsize)
+	accuracy = test_CNN(cnn, test_in, test_out, batchsize=batchsize)
+	print('CNN test accuracy: {}'.format(accuracy))
 	save_CNN(cnn,json_filepath='./models/speech_CNN_v1.txt',weight_filepath='./models/speech_CNN_v1.h5')
 	cnn2 = load_CNN(json_filepath='./models/speech_CNN_v1.txt',weight_filepath='./models/speech_CNN_v1.h5')
 
