@@ -8,8 +8,9 @@ from keras.layers import Conv2D, BatchNormalization, Dropout, Activation, Flatte
 
 def load_dataset(filepath):
 	mini_speech_data = np.load(filepath)
-	train_in = mini_speech_data['train_in']
-	train_out = mini_speech_data['train_out']
+	train_indices = np.random.permutation(len(mini_speech_data['train_out']))
+	train_in = mini_speech_data['train_in'][train_indices]
+	train_out = mini_speech_data['train_out'][train_indices]
 	test_in = mini_speech_data['test_in']
 	test_out = mini_speech_data['test_out']
 	labels = mini_speech_data['labels']
