@@ -64,27 +64,40 @@ def build_CNN(input_shape):
 def train_CNN(cnn, train_in, train_out, epochs, batchsize, validation_split=0):
 	from tensorflow.python.client import device_lib
 	device_lib.list_local_devices()
-	cnn.fit(x=train_in,y=train_out,batch_size=batchsize,epochs=epochs,shuffle=True, validation_split=validation_split)
+	return cnn.fit(x=train_in,y=train_out,batch_size=batchsize,epochs=epochs,shuffle=True, validation_split=validation_split)
 
 def test_CNN(cnn, test_in, test_out, batchsize):
 	acc = cnn.evaluate(x=test_in,y=test_out,batch_size=batchsize)
 	return acc[1]
 
-def save_CNN(cnn,json_filepath,weight_filepath):
+def save_CNN(cnn,model_name,train_history,test_accuracy):
+	# save json
 	model_json = cnn.to_json()
-	with open(json_filepath,'w') as json_file:
+	with open(model_name+'.json','w') as json_file:
 		json_file.write(model_json)
 		json_file.close()
-	cnn.save_weights(weight_filepath)
+	# save weight
+	cnn.save_weights(model_name+'.h5')
+	# save train_history graph
+	fig, ax = plt.subplots()
+	l1, = ax.plot(train_history.history['acc'])
+	l2, = ax.plot(train_history.history['val_acc'])
+	l3, = ax.plot(train_history.history['loss'])
+	l4, = ax.plot(train_history.history['val_loss'])
+	ax.grid(True)
+	ax.set_xlabel('epochs')
+	ax.set_ylabel('accuracy')
+	ax.set_title('{} final accuracy: {:.4f}'.format(model_name,test_accuracy))
+	ax.legend((l1,l2),('training accuracy','validation accuracy'))
+	plt.savefig(model_name+'.png')
 	print('model saved to disk')
 
-def load_CNN(json_filepath,weight_filepath=None):
-	json_file = open(json_filepath,'r')
+def load_CNN(model_name):
+	json_file = open(model_name+'.json','r')
 	model_json = json_file.read()
 	json_file.close()
 	cnn = keras.models.model_from_json(model_json)
-	if weight_filepath!=None:
-		cnn.load_weights(weight_filepath)
+	cnn.load_weights(model_name+'.h5')
 	cnn.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.adam(), metrics=['acc'])
 	cnn.summary()
 	print('model loaded successfully')
@@ -96,11 +109,11 @@ def main():
 	batchsize = 100
 	train_in, train_out, test_in, test_out, input_shape, labels = load_dataset(data_filepath)
 	cnn = build_CNN(input_shape)
-	train_CNN(cnn, train_in, train_out, epochs=epochs, batchsize=batchsize, validation_split=0.05)
+	history = train_CNN(cnn, train_in, train_out, epochs=epochs, batchsize=batchsize, validation_split=0.05)
 	accuracy = test_CNN(cnn, test_in, test_out, batchsize=batchsize)
 	print('CNN test accuracy: {}'.format(accuracy))
-	save_CNN(cnn,json_filepath='./models/speech_CNN_v1.txt',weight_filepath='./models/speech_CNN_v1.h5')
-	cnn2 = load_CNN(json_filepath='./models/speech_CNN_v1.txt',weight_filepath='./models/speech_CNN_v1.h5')
+	save_CNN(cnn,model_name='./models/speech_CNN_v1',train_history=history,test_accuracy=accuracy)
+	load_CNN(model_name='./models/speech_CNN_v1')
 
 
 if __name__ == '__main__':
