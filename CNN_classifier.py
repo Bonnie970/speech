@@ -81,14 +81,14 @@ def save_CNN(cnn,model_name,train_history,test_accuracy):
 	# save train_history graph
 	fig, ax = plt.subplots()
 	l1, = ax.plot(train_history.history['acc'])
-	l2, = ax.plot(train_history.history['val_acc'])
+	l2, = ax.plot(train_history.history['val_acc'],linestyle='-.')
 	l3, = ax.plot(train_history.history['loss'])
-	l4, = ax.plot(train_history.history['val_loss'])
+	l4, = ax.plot(train_history.history['val_loss'],linestyle='-.')
 	ax.grid(True)
 	ax.set_xlabel('epochs')
 	ax.set_ylabel('accuracy')
 	ax.set_title('{} final accuracy: {:.4f}'.format(model_name,test_accuracy))
-	ax.legend((l1,l2),('training accuracy','validation accuracy'))
+	ax.legend((l1,l2,l3,l4),('train accuracy','val accuracy','train loss','val loss'))
 	plt.savefig(model_name+'.png')
 	print('model saved to disk')
 
