@@ -25,8 +25,8 @@ def display_analysis(filename,samples,spectrogram,freqs,times):
 	ax1.plot(samples)
 
 	ax2 = fig.add_subplot(212)
-	ax2.imshow(spectrogram.T, aspect='auto', origin='lower', 
-	           extent=[times.min(), times.max(), freqs.min(), freqs.max()],cmap='coolwarm')
+	ax2.imshow(spectrogram.T, aspect='auto', origin='lower',
+                    extent=[times.min(), times.max(), freqs.min(), freqs.max()],cmap='coolwarm')
 	ax2.set_yticks(freqs[::16])
 	ax2.set_xticks(times[::16])
 	ax2.set_title('Spectrogram of ' + filename)
@@ -36,7 +36,7 @@ def display_analysis(filename,samples,spectrogram,freqs,times):
 	plt.show()
 
 def log_specgram(audio, sample_rate, window_size=20,
-				 step_size=10, eps=1e-10):
+                 step_size=10, eps=1e-10):
 	nperseg = int(round(window_size * sample_rate / 1e3))
 	noverlap = int(round(step_size * sample_rate / 1e3))
 	freqs, times, spec = signal.spectrogram(audio,fs=sample_rate, window='hann', nperseg=nperseg,
@@ -65,7 +65,7 @@ def main():
 			filepath = os.path.join(dirpath,fn)
 			sample_rate, samples = wavfile.read(filepath)
 			freqs, times, spectrogram = log_specgram(samples, sample_rate, window_size=20, step_size=10)
-			# average spectrogram shape is (97.3,161)   vvvvv: x and y are reversed in cv2 
+			# average spectrogram shape is (97.3,161)   vvvvv: x and y are reversed in cv2
 			spectrogram = cv2.resize(spectrogram,dsize=(161,100),interpolation=cv2.INTER_CUBIC)
 			spectrogram = spectrogram.reshape(100,161,1)
 
@@ -86,11 +86,12 @@ def main():
 
 	save_filename = './mini_speech_data.npz'
 	np.savez(save_filename,
-			 train_in = train_in,
-			 train_out = train_out,
-			 test_in = test_in,
-			 test_out = test_out,
-			 labels = labels_list)
+                 train_in = train_in,
+                 train_out = train_out,
+                 test_in = test_in,
+                 test_out = test_out,
+                 labels = labels_list)
 
 if __name__ == '__main__':
 	main()
+

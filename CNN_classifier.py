@@ -15,7 +15,7 @@ def load_dataset(filepath):
 	test_out = mini_speech_data['test_out']
 	labels = mini_speech_data['labels']
 	input_shape = train_in[0].shape
-	return train_in, train_out, test_in, test_out, input_shape, labels		
+	return train_in, train_out, test_in, test_out, input_shape, labels
 
 def build_CNN(input_shape):
 	cnn = keras.models.Sequential()
