@@ -15,9 +15,11 @@ def load_dataset(filepath):
     test_out = mini_speech_data['test_out']
     labels = mini_speech_data['labels']
     input_shape = train_in[0].shape
-    return train_in, train_out, test_in, test_out, input_shape, labels
+    num_classes = len(labels)
+    print(num_classes)
+    return train_in, train_out, test_in, test_out, input_shape, labels, num_classes
 
-def build_CNN(input_shape):
+def build_CNN(input_shape,num_classes):
     cnn = keras.models.Sequential()
     # conv layer 1
     cnn.add(Conv2D(filters=16, kernel_size=(3,3), padding='same', strides=(1,1), input_shape=input_shape))
@@ -53,7 +55,7 @@ def build_CNN(input_shape):
     cnn.add(Activation(activation=keras.activations.relu))
     cnn.add(Dropout(rate=0.2))
     # output layer
-    cnn.add(Dense(units=10))
+    cnn.add(Dense(units=num_classes))
     cnn.add(BatchNormalization())
     cnn.add(Activation(activation=keras.activations.softmax))
 
@@ -104,16 +106,24 @@ def load_CNN(model_name):
     return cnn
 
 def main():
-    data_filepath = './mini_speech_data.npz'
+    data_filepath = './medium_speech_data.npz'
+    # training setting
     epochs = 50
     batchsize = 100
-    train_in, train_out, test_in, test_out, input_shape, labels = load_dataset(data_filepath)
-    cnn = build_CNN(input_shape)
+    # read dataset
+    train_in, train_out, test_in, test_out, input_shape, labels, num_classes = load_dataset(data_filepath)
+    print(train_in.shape)
+    print(input_shape)
+    # build model
+    cnn = build_CNN(input_shape,num_classes)
+    # train and tes # train and testt
     history = train_CNN(cnn, train_in, train_out, epochs=epochs, batchsize=batchsize, validation_split=0.05)
     accuracy = test_CNN(cnn, test_in, test_out, batchsize=batchsize)
     print('CNN test accuracy: {}'.format(accuracy))
-    save_CNN(cnn,model_name='./models/speech_CNN_v1',train_history=history,test_accuracy=accuracy)
-    load_CNN(model_name='./models/speech_CNN_v1')
+
+    save_CNN(cnn,model_name='./models/speech_CNN_v2',train_history=history,test_accuracy=accuracy)
+    load_CNN(model_name='./models/speech_CNN_v2')
+    return
 
 
 if __name__ == '__main__':
