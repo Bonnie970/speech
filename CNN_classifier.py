@@ -130,9 +130,9 @@ def save_CNN(cnn,model_name,train_history,test_accuracy):
     # save train_history graph
     fig, ax = plt.subplots()
     l1, = ax.plot(train_history.history['acc'])
-    l2, = ax.plot(train_history.history['val_acc'],linestyle='-.')
+    l2, = ax.plot(train_history.history['val_acc']))
     l3, = ax.plot(train_history.history['loss'])
-    l4, = ax.plot(train_history.history['val_loss'],linestyle='-.')
+    l4, = ax.plot(train_history.history['val_loss'])
     ax.grid(True)
     ax.set_xlabel('epochs')
     ax.set_ylabel('accuracy')
