@@ -1,3 +1,4 @@
+import os
 import keras
 import json
 import numpy as np
@@ -5,6 +6,50 @@ import tensorflow
 import matplotlib
 import matplotlib.pyplot as plt
 from keras.layers import Conv2D, BatchNormalization, Dropout, Activation, Flatten, Dense, MaxPooling2D
+
+
+class ValBest(keras.callbacks.Callback):
+    def __init__(self, monitor="val_loss", verbose=0, mode="auto", period=1):
+        super(ValBest, self).__init__()
+        self.monitor = monitor
+        self.verbose = verbose
+        self.period = period
+        self.epochs_since_last_save = 0
+
+        if(mode not in ["auto", "min", "max"]):
+            mode = "auto"
+
+        if(mode == "min"):
+            self.monitor_op = np.less
+            self.best = np.Inf
+        elif(mode == "max"):
+            self.monitor_op = np.greater
+            self.best = -np.Inf
+        else:
+            if("acc" in self.monitor):
+                self.monitor_op = np.greater
+                self.best = -np.Inf
+            else:
+                self.monitor_op = np.less
+                self.best = np.Inf
+
+    def on_train_begin(self, logs=None):
+        self.best = np.Inf if self.monitor_op == np.less else -np.Inf
+        self.best_weights = self.model.get_weights()
+
+    def on_epoch_end(self, epoch, logs=None):
+        self.epochs_since_last_save += 1
+        if(self.epochs_since_last_save >= self.period):
+            self.epochs_since_last_save = 0
+            current = logs.get(self.monitor)
+            if(self.monitor_op(current, self.best)):
+                if(self.verbose > 0):
+                    print('\nEpoch %05d: %s improved from %0.5f to %0.5f, saving weights' % (epoch + 1, self.monitor, self.best, current))
+                self.best = current
+                self.best_weights = self.model.get_weights()
+
+    def on_train_end(self, logs=None):
+        self.model.set_weights(self.best_weights)
 
 def load_dataset(filepath):
     mini_speech_data = np.load(filepath)
@@ -66,7 +111,9 @@ def build_CNN(input_shape,num_classes):
 def train_CNN(cnn, train_in, train_out, epochs, batchsize, validation_split=0):
     from tensorflow.python.client import device_lib
     device_lib.list_local_devices()
-    return cnn.fit(x=train_in,y=train_out,batch_size=batchsize,epochs=epochs,shuffle=True, validation_split=validation_split)
+    return cnn.fit(x=train_in, y=train_out, batch_size=batchsize,\
+                   epochs=epochs, shuffle=True, callbacks=[ValBest]\
+                   validation_split=validation_split)
 
 def test_CNN(cnn, test_in, test_out, batchsize):
     acc = cnn.evaluate(x=test_in,y=test_out,batch_size=batchsize)
@@ -106,6 +153,7 @@ def load_CNN(model_name):
     return cnn
 
 def main():
+    #  os.environ['CUDA_VISIBLE_DEVICES'] = '1'
     data_filepath = './medium_speech_data.npz'
     # training setting
     epochs = 50
