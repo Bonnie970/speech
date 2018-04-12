@@ -155,7 +155,7 @@ def load_CNN(model_name):
 
 def main():
     os.environ['CUDA_VISIBLE_DEVICES'] = '1'
-    data_filepath = './medium_speech_data.npz'
+    data_filepath = './mini_speech_data.npz'
     # training setting
     epochs = 50
     batchsize = 100
@@ -170,8 +170,8 @@ def main():
     accuracy = test_CNN(cnn, test_in, test_out, batchsize=batchsize)
     print('CNN test accuracy: {}'.format(accuracy))
 
-    save_CNN(cnn,model_name='./models/speech_CNN_v1',train_history=history,test_accuracy=accuracy)
-    load_CNN(model_name='./models/speech_CNN_v1')
+    save_CNN(cnn,model_name='./models/speech_CNN_mini_v2',train_history=history,test_accuracy=accuracy)
+    load_CNN(model_name='./models/speech_CNN_mini_v2')
     return
 
 
