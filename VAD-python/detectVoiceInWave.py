@@ -1,3 +1,4 @@
+import os
 import sys
 import argparse
 import json
@@ -14,9 +15,18 @@ if __name__ == "__main__":
     #  parser.add_argument('outputfile', metavar='OUTPUTFILE',
     #                      help='the full path to output json file to save detected speech intervals')
     #  args = parser.parse_args()
+    dirpath = '/home/zixuan/Desktop/speech/dataset/train/audio/yes'
+    file_list = os.listdir(dirpath)
+    wav_files = []
+    for fn in file_list:
+        if fn[-4:] == '.wav':
+            wav_files.append(fn)
+    #  print(wav_files)
+    for fn in wav_files:
+        wav_path = os.path.join(dirpath,fn)
+        v = VoiceActivityDetector(wav_path)
+        v.plot_detected_speech_regions()
 
-    v = VoiceActivityDetector('/home/zixuan/Desktop/speech/dataset/train/audio/yes/004ae714_nohash_0.wav')
-    v.plot_detected_speech_regions()
     sys.exit()
     raw_detection = v.detect_speech()
     speech_labels = v.convert_windows_to_readible_labels(raw_detection)
