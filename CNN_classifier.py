@@ -111,7 +111,10 @@ def build_CNN(input_shape,num_classes):
 def train_CNN(cnn, train_in, train_out, epochs, batchsize, validation_split=0):
     from tensorflow.python.client import device_lib
     device_lib.list_local_devices()
-    callback = ValBest()
+    if validation_split>0:
+        callback = ValBest()
+    else
+        callback = None
     return cnn.fit(x=train_in, y=train_out, batch_size=batchsize,\
                    epochs=epochs, shuffle=True, callbacks=[callback],\
                    validation_split=validation_split)
