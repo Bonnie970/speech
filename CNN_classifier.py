@@ -111,8 +111,9 @@ def build_CNN(input_shape,num_classes):
 def train_CNN(cnn, train_in, train_out, epochs, batchsize, validation_split=0):
     from tensorflow.python.client import device_lib
     device_lib.list_local_devices()
+    callback = ValBest()
     return cnn.fit(x=train_in, y=train_out, batch_size=batchsize,\
-                   epochs=epochs, shuffle=True, callbacks=[ValBest]\
+                   epochs=epochs, shuffle=True, callbacks=[callback],\
                    validation_split=validation_split)
 
 def test_CNN(cnn, test_in, test_out, batchsize):
@@ -130,7 +131,7 @@ def save_CNN(cnn,model_name,train_history,test_accuracy):
     # save train_history graph
     fig, ax = plt.subplots()
     l1, = ax.plot(train_history.history['acc'])
-    l2, = ax.plot(train_history.history['val_acc']))
+    l2, = ax.plot(train_history.history['val_acc'])
     l3, = ax.plot(train_history.history['loss'])
     l4, = ax.plot(train_history.history['val_loss'])
     ax.grid(True)
@@ -153,7 +154,7 @@ def load_CNN(model_name):
     return cnn
 
 def main():
-    #  os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '1'
     data_filepath = './medium_speech_data.npz'
     # training setting
     epochs = 50
@@ -169,8 +170,8 @@ def main():
     accuracy = test_CNN(cnn, test_in, test_out, batchsize=batchsize)
     print('CNN test accuracy: {}'.format(accuracy))
 
-    save_CNN(cnn,model_name='./models/speech_CNN_v2',train_history=history,test_accuracy=accuracy)
-    load_CNN(model_name='./models/speech_CNN_v2')
+    save_CNN(cnn,model_name='./models/speech_CNN_v1',train_history=history,test_accuracy=accuracy)
+    load_CNN(model_name='./models/speech_CNN_v1')
     return
 
 

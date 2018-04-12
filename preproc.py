@@ -57,12 +57,12 @@ def spectrogram_normalization(spectrogram):
 
 def main():
     datadir = './dataset/train/audio/'
-    labels = {'yes':0,'no':1,'up':2,'down':3,'left':4,'right':5,\
-            'on':6,'off':7,'go':8,'stop':9,'one':10,\
-            'two':11,'three':12,'four':13,'five':14}
+    labels = {'yes':0,'no':1,'up':2,'down':3,'left':4,\
+            'right':5,'on':6,'off':7,'go':8,'stop':9}
+            #  'one':10,'two':11,'three':12,'four':13,'five':14}
     labels_list = np.array(['yes','no','up','down','left',\
-            'right','on','off','go','stop',\
-            'one','two','three','four','five'])
+            'right','on','off','go','stop'])
+            #  'one','two','three','four','five'])
 
     train_in = []
     train_out = []
@@ -105,7 +105,7 @@ def main():
     print(test_in.shape)
     print(test_out.shape)
 
-    save_filename = './medium_speech_data.npz'
+    save_filename = './mini_speech_data.npz'
     np.savez(save_filename,
                  train_in = train_in,
                  train_out = train_out,
