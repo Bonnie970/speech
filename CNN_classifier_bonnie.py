@@ -60,7 +60,7 @@ def build_CNN(input_shape):
 	cnn.add(BatchNormalization())
 	cnn.add(Activation(activation=keras.activations.softmax))
 
-	cnn.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.adam(), metrics=['acc'])
+	cnn.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.adam(decay=1e-4), metrics=['acc'])
 	cnn.summary()
 	return cnn
 
@@ -108,15 +108,20 @@ def load_CNN(model_name):
 
 def main():	
 	data_filepath = './mini_speech_data.npz'
-	epochs = 50
-	batchsize = 100
+    #for batchsize in [25, 50, 75, 100, 125, 150, 175, 200]
+	model_name='./models/speech_CNN_v12_batch5then2'
+	epochs = 25
+	batchsize = 10
 	train_in, train_out, test_in, test_out, input_shape, labels = load_dataset(data_filepath)
-	cnn = build_CNN(input_shape)
+	print('###', len(train_in), print(len(test_in)))
+	#cnn = build_CNN(input_shape)
+	load_model_name = './models/speech_CNN_v12_batch5'
+	cnn = load_CNN(load_model_name)
 	history = train_CNN(cnn, train_in, train_out, epochs=epochs, batchsize=batchsize, validation_split=0.05)
 	accuracy = test_CNN(cnn, test_in, test_out, batchsize=batchsize)
 	print('CNN test accuracy: {}'.format(accuracy))
-	save_CNN(cnn,model_name='./models/speech_CNN_v2',train_history=history,test_accuracy=accuracy)
-	load_CNN(model_name='./models/speech_CNN_v2')
+	save_CNN(cnn,model_name=model_name,train_history=history,test_accuracy=accuracy)
+	load_CNN(model_name=model_name)
 	
 
 
