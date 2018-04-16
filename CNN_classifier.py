@@ -169,7 +169,6 @@ def main():
     print(input_shape)
     # build model
     cnn = build_CNN(input_shape,num_classes)
-    sys.exit()
     # train and tes # train and testt
     history = train_CNN(cnn, train_in, train_out, epochs=epochs, batchsize=batchsize, validation_split=0.05)
     accuracy = test_CNN(cnn, test_in, test_out, batchsize=batchsize)
