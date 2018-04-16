@@ -1,4 +1,5 @@
 import os
+import sys
 import keras
 import json
 import numpy as np
@@ -113,7 +114,7 @@ def train_CNN(cnn, train_in, train_out, epochs, batchsize, validation_split=0):
     device_lib.list_local_devices()
     if validation_split>0:
         callback = ValBest()
-    else
+    else:
         callback = None
     return cnn.fit(x=train_in, y=train_out, batch_size=batchsize,\
                    epochs=epochs, shuffle=True, callbacks=[callback],\
@@ -168,6 +169,7 @@ def main():
     print(input_shape)
     # build model
     cnn = build_CNN(input_shape,num_classes)
+    sys.exit()
     # train and tes # train and testt
     history = train_CNN(cnn, train_in, train_out, epochs=epochs, batchsize=batchsize, validation_split=0.05)
     accuracy = test_CNN(cnn, test_in, test_out, batchsize=batchsize)
