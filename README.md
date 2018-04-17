@@ -2,8 +2,8 @@
 
 ### ECSE523 Winter 2018 Final Project 
 
-Alex~Yin [260502051], zixuan.yin@mail.mcigll.ca 
-Bonnie~Hu [260556970], guanqing.hu@mail.mcgill.ca
+Alex Yin [260502051], zixuan.yin@mail.mcigll.ca 
+Bonnie Hu [260556970], guanqing.hu@mail.mcgill.ca
 
 Simple speech command is a widely requested feature in many trending artificial intelligent applications. This project presents the implementation and testing of a Convolutional Neural Network (CNN) solution to classify simple spoken commands with tuning results of various speech preprocessing techniques.
 
